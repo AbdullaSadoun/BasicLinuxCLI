@@ -1,0 +1,7 @@
+This is the output "README.txt" file that will highlight how to use the program
+
+- To initially run the program, head to the directory in which its contained using the terminal
+- Use: gcc -o main main.c
+- Then type in: ./main 
+- You should get a prompt like this asking for input "CSCI320> "
+- Enter you desired command and then hit enter

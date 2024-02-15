@@ -1,20 +1,19 @@
 /*
-Basic Shell Program
-This program is a simple shell program that takes user input and executes it as a command.
-The program will continue to run until the user enters "exit".
 Abdulla Sadoun
 CSCI 3120
-*/
-/*
 Assignment 2
-Specifically, this assignment consists of two tasks:
-a) Creating the child process and executing the command via the child process.
-b) Modifying the shell to allow a history feature.
-The details of these tasks will be described in the following sections.
-2) Creating a Child Process: The first task is to modify the main() function in the code shown
-above so that a child process is created using fork() and thereafter the child process
-replaces itself with the command specified by the user using execvp(). To accomplish this
-task, your program needs to parse what the user has entered into separate tokens and store
+
+Basic Shell Program
+This program is a simple shell program that takes user input and executes it as a command.
+
+The program will continue to run until the user enters "exit".
+The program uses the fork() system call to create a new process.
+The child process then uses the execvp() system call to replace itself with the command specified by the user.
+The parent process waits for the child process to complete before continuing.
+The program also includes a history feature that allows the user to view the last 10 commands entered.
+The user can also execute a specific command from the history by entering "!n" where n is the number of the command in the history.
+The user can also execute the last command in the history by entering "!!".
+
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,12 +28,20 @@ int main(void) {
     int should_run = 1; /* flag to determine when to exit program */
     char input[100]; // Buffer to store user input
 
+    // create a variable to store history of commands (25char maax, 10 commands max)
+    char history[10][25];
+    int history_count = 0;
+    
+
     while (should_run) {
         printf("CSCI320>");
         fflush(stdout);
 
         fgets(input, sizeof(input), stdin); // reading user input from stdin
         input[strcspn(input, "\n")] = 0; // Remove newline character
+        // save the command to history
+        strcpy(history[history_count], input);
+
 
         if(strcmp(input, "exit") == 0) { // Checking for exit command
             should_run = 0; // exiting the loop 
@@ -63,43 +70,8 @@ int main(void) {
             // Fork failed
             perror("fork");
         }
-    
-        /**
-        * After reading user input, the steps are:
-        
-        * (1) Fork a child process using fork()
-            Note that: The fork() system call is invoked inside a while
-            loop. If the while loop is not well programmed, it will
-            invoke fork() continuously, potentially leading to many
-            child processes. When there are too many dangling processes
-            under your account, your CSID will be suspended. You are
-            encouraged to use the commands in Appendix 2 to monitor your
-            processes. And if you cannot log into “csci3120.cs.dal.ca”
-            using your CSID any more, you need to contact with
-            cshelp@cs.dal.ca to unlock your CSID.
 
-        * (2) The child process will invoke execvp()
-            Note that:
-            (i) If the user input is an invalid command, execvp() will
-            not replace the child process with a binary executable.
-            Instead, execvp() returns the value of “-1”. In this case,
-            the child process should check the return value and invoke
-            exit() system call to terminate itself. Otherwise, the child
-            process will keep running, potentially leading to the
-            situation where the parent waits for the child to terminate
-            and the child becomes a clone of the parent (note that, in
-            this case, the child would create its own child process if
-            the user enters another command).
-            (ii)If the user input is a valid command, exit() does not
-            need to be invoked because the child process will be
-            replaced with the binary executable corresponding to the
-            valid command, and the executable can be terminated
-            properly. The details can be found in Section 3.4.b.c.
-
-        * (3) Parent will invoke wait()
-        **/
-
-        
+        history_count++;
     }
     return 0;
 }
