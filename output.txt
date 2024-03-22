@@ -5,3 +5,14 @@ This is the output "README.txt" file that will highlight how to use the program
 - Then type in: ./main 
 - You should get a prompt like this asking for input "CSCI320> "
 - Enter you desired command and then hit enter
+- If you enter "history, you will view that last commands you entered
+    along with their ID and PID. (up to 10 commands)
+- You can enter !n where to execute "n-command" in your command history
+- You can also use !! to directly executethe last command in history
+- When you are ready to end the session, enter "exit"
+
+additional notes and refrences: 
+- used a 2d array to store the history
+- additional references and sources:
+    https://www.geeksforgeeks.org/c-programming-language/
+    https://www.geeksforgeeks.org/fork-system-call/
